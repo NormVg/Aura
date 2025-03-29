@@ -1,11 +1,12 @@
 @import url('https://fonts.googleapis.com/css2?family=K2D:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800&display=swap');
 
 :root{
-
+  --sc:#4E4D54;
   --font-color: #ADACB3;
   --pbgc: #18171C;
   --sbgc:#1E1E20;
-  --bdr:10px
+  --bdr:10px;
+  --bdrc:#4E4D54;
 }
 
 .k2d {
@@ -18,7 +19,7 @@ body{
   background-color: #18171C;
   background-image: url(../assets/bg.svg);
   background-size: cover;
-  background-repeat: no-repeat;
+  /* background-repeat: no-repeat; */
   background-blend-mode: overlay;
   font-family: "K2D", sans-serif;
   font-style: normal;

@@ -74,7 +74,7 @@ const HandleMenu = (params) => {
 
 #sb-apps {
   /* border: 1px solid green; */
-  z-index: 20;
+  z-index: 26;
   display: flex;
   justify-content: center;
   align-items: center;

@@ -1,4 +1,92 @@
+<script setup>
+import LeftCurve from "../assets/img/left-curve.svg";
+import RightCurve from "../assets/img/right-curve.svg";
+import { useMenuStore } from "../store/menuStore";
+import AppMenu from "./AppMenu.vue";
+import SideBar from "./SideBar.vue";
+
+import { useWorkspaceStore} from "../store/WorkSpace";
+
+const menuStore = useMenuStore();
+const workspaceStore = useWorkspaceStore()
+</script>
+
+<template>
+  <div id="footer-box">
+
+    <div id="footer-slider">
+
+      <div id="fs-box">
+        <div id="slider-bar">
+          <div id="slider-ball">{{ workspaceStore.currentWorkspaceIndex+1 }}<span>•</span>{{ workspaceStore.AllWorkspace.length }}</div>
+        </div>
+      </div>
+      <div id="after-tb"><img :src="RightCurve" /></div>
+    </div>
+
+
+    <div id="footer-text-box">
+      <div id="before-tb"><img :src="LeftCurve" /></div>
+      <div id="tb-text">Hello Boss, how are you</div>
+      <div id="after-tb"><img :src="RightCurve" /></div>
+    </div>
+
+    <div id="footer-side-bar">
+      <div id="before-tb"><img :src="LeftCurve" /></div>
+      <!-- <div id="sb-box"> -->
+
+      <SideBar />
+      <AppMenu />
+      <!-- </div> -->
+    </div>
+
+    <div id="footer-bar"></div>
+  </div>
+</template>
 <style scoped>
+
+#fs-box{
+  height: 100%;
+  width: 100%;
+  /* border: 1px salmon dashed; */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#slider-bar{
+  width: 80%;
+  height: 7px;
+  border-radius: 10px;
+  display: flex;
+  /* justify-content: center; */
+  align-items: center;
+  background-color: var(--sc);
+}
+#slider-ball{
+  height: 20px;
+  width: 35px;
+  border-radius: 5px;
+  background-color: var(--sc);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 14px;
+  color: #18171C;
+  padding-top: 2px;
+  transition: all 200ms ease-in-out;
+}
+
+/* #slider-ball:hover{
+  scale: 1.05;
+} */
+
+#slider-ball span{
+  margin-left: 2px;
+  margin-right: 2px;
+}
+
+
 #footer-box {
   position: fixed;
   bottom: 0;
@@ -37,10 +125,7 @@
   width: max-content;
   border-top-left-radius: var(--bdr);
   border-top-right-radius: var(--bdr);
-  /* position: fixed; */
-  /* bottom: 13px; */
-  /* left: 50%; */
-  /* transform: translateX(-50%); */
+
 }
 
 #before-tb {
@@ -48,7 +133,7 @@
   position: absolute;
   bottom: 0%;
   left: -20px;
-  /* border: 1px solid green; */
+
   height: 20px;
   width: 20px;
 }
@@ -63,7 +148,7 @@
   position: absolute;
   bottom: 0%;
   right: -20px;
-  /* border: 1px solid green; */
+
   height: 20px;
   width: 20px;
 }
@@ -82,36 +167,16 @@
   bottom: 13px;
   right: 0;
 }
+
+#footer-slider {
+  background-color: var(--sbgc);
+  border-top-right-radius: var(--bdr);
+
+  height: 40px;
+  width: 130px;
+  position: fixed;
+  bottom: 13px;
+  left: 0;
+}
+
 </style>
-
-<script setup>
-import LeftCurve from "../assets/img/left-curve.svg";
-import RightCurve from "../assets/img/right-curve.svg";
-import { useMenuStore } from "../store/menuStore";
-import AppMenu from "./AppMenu.vue";
-import SideBar from "./SideBar.vue";
-
-const menuStore = useMenuStore();
-</script>
-
-<template>
-  <div id="footer-box">
-    <div id="footer-text-box">
-      <div id="before-tb"><img :src="LeftCurve" /></div>
-      <div id="tb-text">Hello Boss, how are you</div>
-      <div id="after-tb"><img :src="RightCurve" /></div>
-    </div>
-
-    <div id="footer-side-bar">
-      <div id="before-tb"><img :src="LeftCurve" /></div>
-      <!-- <div id="sb-box"> -->
-
-      <SideBar />
-      <AppMenu />
-      <!-- </div> -->
-    </div>
-
-    <div id="footer-bar"></div>
-  </div>
-</template>
-<script setup></script>

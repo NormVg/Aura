@@ -41,7 +41,7 @@ const handleMouseEnter = async () => {
 };
 
 const waitOneSecond = async () => {
-  return new Promise((resolve) => setTimeout(resolve,500));
+  return new Promise((resolve) => setTimeout(resolve,100));
 };
 
 const handleMouseLeave = async () => {
