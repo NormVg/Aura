@@ -58,7 +58,6 @@
   width: 20px;
 }
 
-
 #after-tb {
   background-color: transparent;
   position: absolute;
@@ -74,30 +73,42 @@
   width: 25px;
 }
 
-/* ::before {
-  content: "";
-  position: absolute;
-
-  background-color: transparent;
-  bottom: -50px;
-  height: 50px;
-  width: 25px;
-  border-top-left-radius: 25px;
-  box-shadow: 0 -25px 0 0 #F66969;
-} */
+#footer-side-bar {
+  background-color: var(--sbgc);
+  border-top-left-radius: var(--bdr);
+  height: 200px;
+  width: 50px;
+  position: fixed;
+  bottom: 13px;
+  right: 0;
+}
 </style>
 
 <script setup>
 import LeftCurve from "../assets/img/left-curve.svg";
 import RightCurve from "../assets/img/right-curve.svg";
+import { useMenuStore } from "../store/menuStore";
+import AppMenu from "./AppMenu.vue";
+import SideBar from "./SideBar.vue";
+
+const menuStore = useMenuStore();
 </script>
 
 <template>
   <div id="footer-box">
     <div id="footer-text-box">
       <div id="before-tb"><img :src="LeftCurve" /></div>
-      <div id="tb-text">Hello Boss, how are you </div>
+      <div id="tb-text">Hello Boss, how are you</div>
       <div id="after-tb"><img :src="RightCurve" /></div>
+    </div>
+
+    <div id="footer-side-bar">
+      <div id="before-tb"><img :src="LeftCurve" /></div>
+      <!-- <div id="sb-box"> -->
+
+      <SideBar />
+      <AppMenu />
+      <!-- </div> -->
     </div>
 
     <div id="footer-bar"></div>
