@@ -9,13 +9,21 @@ import MicIcon from "../assets/icon/mic.svg";
 import ToggleIcon from "./ToggleIcon.vue";
 
 import { useMenuStore } from "../store/menuStore";
+import { useAppBasic } from "../store/AppBasicStore";
 
 const menuStore = useMenuStore();
+const AppBasic = useAppBasic()
 
 const HandleMenu = (params) => {
   // alert(params);
   menuStore.SetIsMenu(params);
 };
+
+const HandleChat = (params) => {
+  // alert(params);
+  AppBasic.setIsChatBox(params)
+};
+
 
 
 </script>
@@ -29,6 +37,8 @@ const HandleMenu = (params) => {
         id-name="sb-item"
         :n-icon="MessageSquareOutlineIcon"
         :t-icon="MessageSquareIcon"
+        @event="HandleChat"
+
       />
     </div>
 

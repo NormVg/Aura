@@ -6,9 +6,12 @@ import AppMenu from "./AppMenu.vue";
 import SideBar from "./SideBar.vue";
 
 import { useWorkspaceStore} from "../store/WorkSpace";
+import { useAppBasic } from "../store/AppBasicStore";
 
 const menuStore = useMenuStore();
 const workspaceStore = useWorkspaceStore()
+const AppBasic =  useAppBasic()
+
 </script>
 
 <template>
@@ -64,21 +67,23 @@ const workspaceStore = useWorkspaceStore()
   background-color: var(--sc);
 }
 #slider-ball{
-  height: 20px;
-  width: 35px;
-  border-radius: 5px;
+  height: 15px;
+  width: 25px;
+  border-radius: 4px;
   background-color: var(--sc);
   display: flex;
   justify-content: center;
   align-items: center;
-  font-size: 14px;
+  font-size: 12px;
   color: #18171C;
   padding-top: 2px;
   transition: all 200ms ease-in-out;
+  cursor: pointer;
 }
-
-/* #slider-ball:hover{
-  scale: 1.05;
+/*
+#slider-ball:hover{
+  height: 17px;
+  width: 27px;
 } */
 
 #slider-ball span{
@@ -91,6 +96,7 @@ const workspaceStore = useWorkspaceStore()
   position: fixed;
   bottom: 0;
   width: 100%;
+  z-index: 5;
 }
 #footer-box {
   background-color: var(--sbgc);

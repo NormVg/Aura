@@ -9,3 +9,4 @@ import HomeView from './view/HomeView.vue';
 <template>
 <HomeView/>
 </template>
+

@@ -34,10 +34,7 @@ const apps = ref( [
   { name: "App 3", icon: DefIcon },
   { name: "App 4", icon: DefIcon },
   { name: "App 5", icon: DefIcon },
-
   { name: "App 6", icon: testDef },
-
-
 ])
 
 
