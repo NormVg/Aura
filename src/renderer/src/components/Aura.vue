@@ -7,7 +7,6 @@ import AuraChar from "../assets/img/auraCar.svg"
 
 <template>
   <div>
-
     <img :src="AuraChar" alt="Aura logo">
   </div>
 </template>

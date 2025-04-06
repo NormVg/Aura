@@ -7,7 +7,22 @@
   --sbgc:#1E1E20;
   --bdr:10px;
   --bdrc:#4E4D54;
-  --ani-time:400ms
+  --ani-time:400ms;
+  --font-name: "K2D", sans-serif;
+  --z-footer:5;
+  --z-am-btn:15;
+  --z-am:10
+}
+
+
+.v-enter-active,
+.v-leave-active {
+  transition: opacity var(--ani-time) ease;
+}
+
+.v-enter-from,
+.v-leave-to {
+  opacity: 0;
 }
 
 .k2d {

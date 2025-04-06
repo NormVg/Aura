@@ -35,6 +35,8 @@ const apps = ref( [
   { name: "App 4", icon: DefIcon },
   { name: "App 5", icon: DefIcon },
   { name: "App 6", icon: testDef },
+  { name: "App 5", icon: DefIcon },
+  { name: "App 6", icon: testDef },
 ])
 
 
@@ -51,6 +53,25 @@ console.log(param)
   }
   else{
     const val = -9*(index+param)
+    return `transform: rotate(${val}deg);`
+
+  }
+
+}
+
+const customStyleItem = (param)=>{
+console.log(param)
+  var index = param+1
+
+  if (index === 1){
+    const val = 9
+    return `transform: rotate(${val}deg);`
+  }else if(index > 5){
+    // const val = -9*(index+param)
+    return `display:none`
+  }
+  else{
+    const val = 9*(index+param)
     return `transform: rotate(${val}deg);`
 
   }
@@ -116,7 +137,7 @@ const myMouseScroll = debounce((e) => {
 
 
       <div class="app-box" v-for="(item,index) in apps" :key="item" :style="customStyle(index)" >
-        <div id="ab-item" > <img :src="item.icon"></div>
+        <div id="ab-item" :style="customStyleItem(index)"> <img :src="item.icon"></div>
       </div>
 
     </div>
@@ -132,6 +153,7 @@ const myMouseScroll = debounce((e) => {
   left: -15px;
   /* background-color: #6DBBDC; */
   border-radius: 100%;
+  /* transform: rotate(27deg); */
 
 }
 .app-box {
@@ -141,6 +163,7 @@ const myMouseScroll = debounce((e) => {
   margin-bottom: 13px;
   position: fixed;
   transform-origin: bottom;
+  /* background-color: #6DBBDC; */
 
 }
 
@@ -156,7 +179,7 @@ const myMouseScroll = debounce((e) => {
   background-position: center;
   background-size: contain;
   transform-origin: bottom right;
-  z-index: 10;
+  z-index: var(--z-am);
   transition: ease-in-out 400ms;
   right: 0;
   bottom: 0px;

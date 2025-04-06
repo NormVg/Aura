@@ -6,7 +6,7 @@ export const useAppBasic = defineStore('app-basic-store', () => {
   const isChatBox = ref(false)
 
   const MiddleAiText = ref("")
-
+  
   const setIsChatBox = (param)=>{
     isChatBox.value = param
   }

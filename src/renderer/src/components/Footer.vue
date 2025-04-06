@@ -5,68 +5,142 @@ import { useMenuStore } from "../store/menuStore";
 import AppMenu from "./AppMenu.vue";
 import SideBar from "./SideBar.vue";
 
-import { useWorkspaceStore} from "../store/WorkSpace";
+import { useWorkspaceStore } from "../store/WorkSpace";
 import { useAppBasic } from "../store/AppBasicStore";
 
-const menuStore = useMenuStore();
-const workspaceStore = useWorkspaceStore()
-const AppBasic =  useAppBasic()
+import MarkdownRender from "./MarkdownRender.vue";
 
+import { useAiChat } from "../composables/useAiChat";
+import { computed,watch,ref } from "vue";
+const menuStore = useMenuStore();
+const workspaceStore = useWorkspaceStore();
+const AppBasic = useAppBasic();
+
+const { history } = useAiChat();
+
+const TextAi = computed(() => {
+  if (history.value.length === 0) {
+    return "";
+  }
+  return history.value[history.value.length - 1].content;
+});
+
+const isActive =  ref(false)
+
+const OnHistoryChange = () => {
+  console.log("OnHistoryChange");
+  if (TextAi.value === "") {
+    isActive.value = false;
+  } else if (history.value[history.value.length - 1].role === "assistant") {
+    isActive.value = true;
+
+  }else{
+    isActive.value = false;
+  }
+
+};
+
+
+let inactivityTimer = null;
+
+const resetInactivityTimer = () => {
+  if (inactivityTimer) {
+    clearTimeout(inactivityTimer);
+  }
+  inactivityTimer = setTimeout(() => {
+    isActive.value = false;
+  }, 10000); // 10 seconds
+};
+
+const stopInactivityTimer = () => {
+  if (inactivityTimer) {
+    clearTimeout(inactivityTimer);
+    inactivityTimer = null;
+  }
+};
+
+const startInactivityWatcher = () => {
+  watch(
+    () => history.value,
+    () => {
+      if (TextAi.value !== "" && history.value[history.value.length - 1].role === "assistant") {
+        resetInactivityTimer();
+      }
+    },
+    { deep: true }
+  );
+};
+
+const onMouseEnter = () => {
+  stopInactivityTimer();
+};
+
+const onMouseLeave = () => {
+  if (TextAi.value !== "" && history.value[history.value.length - 1].role === "assistant") {
+    resetInactivityTimer();
+  }
+};
+
+startInactivityWatcher();
+
+watch(history.value, OnHistoryChange,{ deep: true });
 </script>
 
 <template>
   <div id="footer-box">
-
     <div id="footer-slider">
-
       <div id="fs-box">
         <div id="slider-bar">
-          <div id="slider-ball">{{ workspaceStore.currentWorkspaceIndex+1 }}<span>•</span>{{ workspaceStore.AllWorkspace.length }}</div>
+          <div id="slider-ball">
+            {{ workspaceStore.currentWorkspaceIndex + 1 }}<span>•</span
+            >{{ workspaceStore.AllWorkspace.length }}
+          </div>
         </div>
       </div>
       <div id="after-tb"><img :src="RightCurve" /></div>
     </div>
 
+    <Transition>
+      <span v-if="isActive">
 
-    <div id="footer-text-box">
-      <div id="before-tb"><img :src="LeftCurve" /></div>
-      <div id="tb-text">Hello Boss, how are you</div>
-      <div id="after-tb"><img :src="RightCurve" /></div>
-    </div>
+        <div id="footer-text-box" v-if="!AppBasic.isChatBox">
+          <div id="before-tb"><img :src="LeftCurve" /></div>
+          <div id="tb-text" @mouseenter="onMouseEnter" @mouseleave="onMouseLeave">
+            <MarkdownRender :md="TextAi" />
+            <!-- {{ TextAi}} -->
+          </div>
+          <div id="after-tb"><img :src="RightCurve" /></div>
+        </div>
+      </span>
+      </Transition>
 
     <div id="footer-side-bar">
       <div id="before-tb"><img :src="LeftCurve" /></div>
-      <!-- <div id="sb-box"> -->
-
       <SideBar />
       <AppMenu />
-      <!-- </div> -->
     </div>
 
     <div id="footer-bar"></div>
   </div>
 </template>
 <style scoped>
-
-#fs-box{
+#fs-box {
   height: 100%;
   width: 100%;
-  /* border: 1px salmon dashed; */
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
-#slider-bar{
+#slider-bar {
   width: 80%;
   height: 7px;
   border-radius: 10px;
   display: flex;
-  /* justify-content: center; */
   align-items: center;
   background-color: var(--sc);
 }
-#slider-ball{
+#slider-ball {
   height: 15px;
   width: 25px;
   border-radius: 4px;
@@ -75,36 +149,29 @@ const AppBasic =  useAppBasic()
   justify-content: center;
   align-items: center;
   font-size: 12px;
-  color: #18171C;
+  color: #18171c;
   padding-top: 2px;
+  padding-left: 2px;
+  padding-right: 2px;
   transition: all 200ms ease-in-out;
   cursor: pointer;
 }
-/*
-#slider-ball:hover{
-  height: 17px;
-  width: 27px;
-} */
 
-#slider-ball span{
+#slider-ball span {
   margin-left: 2px;
   margin-right: 2px;
 }
-
 
 #footer-box {
   position: fixed;
   bottom: 0;
   width: 100%;
-  z-index: 5;
-}
-#footer-box {
+  z-index: var(--z-footer);
   background-color: var(--sbgc);
   height: 13px;
 
   position: fixed;
   bottom: 0;
-  width: 100%;
 }
 
 #footer-text-box {
@@ -112,7 +179,14 @@ const AppBasic =  useAppBasic()
   border-top-left-radius: var(--bdr);
   border-top-right-radius: var(--bdr);
   /* border-radius: 100px; */
-  height: 40px;
+  min-height: 40px;
+  max-height: 70vh;
+  padding-left: 10px;
+  padding-right: 10px;
+  padding-top: 10px;
+  scrollbar-width: none;
+  overflow-y: auto;
+  overflow-x: hidden;
   /* width: 100%; */
   position: fixed;
   bottom: 13px;
@@ -127,11 +201,12 @@ const AppBasic =  useAppBasic()
   justify-content: center;
   align-items: center;
   padding: 0 20px;
-  height: 40px;
+  max-width: 65vw;
+
+  /* min-height: 40px; */
   width: max-content;
   border-top-left-radius: var(--bdr);
   border-top-right-radius: var(--bdr);
-
 }
 
 #before-tb {
@@ -184,5 +259,4 @@ const AppBasic =  useAppBasic()
   bottom: 13px;
   left: 0;
 }
-
 </style>

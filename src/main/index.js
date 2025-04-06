@@ -1,7 +1,40 @@
 import { app, shell, BrowserWindow, ipcMain } from 'electron'
-import { join } from 'path'
+import { join,resolve } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png?asset'
+import fs from "fs";
+import os from "os"
+import path from "path"
+
+const AppResoursePath = app.isPackaged ? join(os.homedir(), `ASD`) : `./resources/`;
+
+
+const { execFile } = require("child_process");
+
+import {generateSpeech} from "./tts"
+
+
+function executeSST(filePath, audioFile) {
+  return new Promise((resolve, reject) => {
+    execFile(filePath, [audioFile], (error, stdout, stderr) => {
+      if (error) {
+        console.error(`Error: ${error.message}`);
+        reject(error);
+        return;
+      }
+
+      try {
+        const outputJson = JSON.parse(stdout);
+        console.log("Output JSON:", outputJson.success);
+        resolve(outputJson);
+      } catch (parseError) {
+        console.error("Failed to parse JSON:", parseError.message);
+        reject(parseError);
+      }
+    });
+  });
+}
+
 
 function createWindow() {
   // Create the browser window.
@@ -20,6 +53,73 @@ function createWindow() {
   mainWindow.on('ready-to-show', () => {
     mainWindow.show()
   })
+
+  ipcMain.handle('tts', async (event, arg) => {
+    console.log('Received request in main process',arg);
+
+
+    await generateSpeech(arg);
+
+    const fileBuffer = fs.readFileSync("./resources/tts_audio.mp3"); // Read audio file synchronously
+    const base64Audio = fileBuffer.toString('base64'); // Convert buffer to base64 string
+    return base64Audio; // Return base64 string to the renderer
+
+  });
+
+
+  ipcMain.handle('sst', async (event, arg) => {
+    console.log('Received request in main process');
+
+
+    const outputJson = await executeSST("./resources/sst", './resources/temp_audio.wav')
+    return outputJson
+  });
+
+
+
+
+
+  // Handle saving audio file
+
+// Set up the IPC handler for saving audio
+ipcMain.on('save-audio', (event, data) => {
+  try {
+    const { buffer, filePath, duration } = data;
+    const filePathf = path.resolve(process.cwd(), 'resources/temp_audio.wav');
+
+    // Convert array back to Buffer
+    const audioBuffer = Buffer.from(buffer);
+
+    // Write file to disk
+    // fs.writeFileSync(filePathf, audioBuffer);
+    fs.writeFileSync(filePathf, audioBuffer, { flag: 'w' });
+    // Send success response
+    event.sender.send('save-audio-response', {
+      success: true,
+      filePath,
+      duration
+    });
+  } catch (error) {
+    console.error('Error saving audio file:', error);
+    // Send error response
+    event.sender.send('save-audio-response', {
+      success: false,
+      error: error.message
+    });
+  }
+});
+
+
+
+//   ipcMain.on('save-audio', (event, buffer) => {
+//     // const dbpath = join(AppResoursePath,`/temp_audio.wav`)
+//     const filePath = path.resolve(process.cwd(), 'resources/temp_audio.wav');
+//     // console.log(dbpath)
+//     // const filePath = './resources/temp_audio.wav' //path.join(__dirname, 'resources', 'temp_audio.wav');
+
+//     fs.writeFileSync(filePath, Buffer.from(buffer));
+//     console.log(`Audio saved at: ${filePath}`);
+// });
 
   mainWindow.webContents.setWindowOpenHandler((details) => {
     shell.openExternal(details.url)
