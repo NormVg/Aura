@@ -1,33 +1,40 @@
 <script setup>
-import Aura from '../components/Aura.vue';
-import Chat from '../components/Chat.vue';
-import Footer from '../components/Footer.vue';
-import { useAppBasic } from '../store/AppBasicStore';
+import Aura from "../components/Aura.vue";
+import Chat from "../components/Chat.vue";
+import Footer from "../components/Footer.vue";
+import { useAppBasic } from "../store/AppBasicStore";
+import { useWorkspaceStore } from "../store/WorkSpace";
+import WorkspaceManager from "../workspace/WorkspaceManager.vue";
+import WorkspaceTab from "../workspace/WorkspaceTab.vue";
+import WorksapceArea from "../workspace/WorkspaceArea.vue";
+import Settings from "../workspace/Settings.vue";
 
 
+const AppBasic = useAppBasic();
+const WorkspaceStore = useWorkspaceStore()
 
-const AppBasic = useAppBasic()
+
+console.log(WorkspaceStore.AllWorkspace)
 
 </script>
 
 <template>
-  <Aura/>
-  <Footer/>
-<Transition>
-  <Chat  v-if="AppBasic.isChatBox" />
-</Transition>
+  <Aura />
+  <Footer />
+  <WorkspaceManager>
+    <WorkspaceTab v-for="item in WorkspaceStore.AllWorkspace" :key="item" :WinID="item.name">
+
+
+      <WorksapceArea v-if="item.name === 'settings'">
+        <Settings/>
+      </WorksapceArea>
+
+      <WorksapceArea v-else>
+        {{ item.name }}
+      </WorksapceArea>
+    </WorkspaceTab>
+  </WorkspaceManager>
+  <Transition>
+    <Chat v-if="AppBasic.isChatBox" />
+  </Transition>
 </template>
-
-
-
-<!-- <style scoped>
-/* .v-enter-active,
-.v-leave-active {
-  transition: opacity var(--ani-time) ease;
-}
-
-.v-enter-from,
-.v-leave-to {
-  opacity: 0;
-} */
-</style> -->

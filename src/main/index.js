@@ -1,4 +1,4 @@
-import { app, shell, BrowserWindow, ipcMain } from 'electron'
+import { app, shell, BrowserWindow, ipcMain,globalShortcut } from 'electron'
 import { join,resolve } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png?asset'
@@ -77,8 +77,6 @@ function createWindow() {
 
 
 
-
-
   // Handle saving audio file
 
 // Set up the IPC handler for saving audio
@@ -142,6 +140,7 @@ app.whenReady().then(() => {
   // Set app user model id for windows
   electronApp.setAppUserModelId('com.electron')
 
+
   // Default open or close DevTools by F12 in development
   // and ignore CommandOrControl + R in production.
   // see https://github.com/alex8088/electron-toolkit/tree/master/packages/utils
@@ -149,8 +148,10 @@ app.whenReady().then(() => {
     optimizer.watchWindowShortcuts(window)
   })
 
-  // IPC test
-  ipcMain.on('ping', () => console.log('pong'))
+  // globalShortcut.register('CommandOrControl+Shift+M', () => {
+  //   console.log('Win key + I detected!');
+  // });
+
 
   createWindow()
 

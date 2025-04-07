@@ -7,8 +7,9 @@ import { createGoogleGenerativeAI } from "@ai-sdk/google";
 const systemPrompt =
   "You are Aura, a highly intelligent and efficient assistant, responding primarily in English, but using basic Hindi for everyday communication and connecting words. Your answers are short, precise, clear, and professional, offering explanations only when asked. You add a touch of wit only when necessary, and your tone remains calm, composed, and always ready to assist—just like a true AI companion.";
 const history = ref([]);
-const model = "gemini-2.5-pro-exp-03-25";
-const key = "AIzaSyBqDP9GHLs6_8lUJZyblbZ1MpcRONA78z8";
+const model = "gemini-2.0-flash-lite"//"gemini-2.5-pro-exp-03-25";
+
+const key = "";
 
 const google = createGoogleGenerativeAI({
   apiKey: key,

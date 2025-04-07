@@ -390,6 +390,7 @@ textarea::-webkit-scrollbar {
 }
 
 #chat-box {
+  z-index: var(--z-chat);
   background-color: #f6f6f613;
   height: 100vh;
   width: 50vw;

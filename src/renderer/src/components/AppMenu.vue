@@ -4,7 +4,7 @@ import { useMenuStore } from "../store/menuStore";
 
 import DefIcon from "../assets/icon/plugin-default-icon.svg"
 import testDef from "../assets/icon/cube.svg"
-import ListMoveSfx from "../assets/listmoving.wav"
+import ListMoveSfx from "../assets/scroll-sound.wav"
 import { useSound } from '@vueuse/sound'
 
 const { play } = useSound(ListMoveSfx)
