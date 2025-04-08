@@ -36,6 +36,27 @@ function executeSST(filePath, audioFile) {
 }
 
 
+
+function ReadWebAppDb(name) {
+
+
+  const dbpath = `./resources/db/${name}.json`
+
+
+  var data = fs.readFileSync(dbpath, "utf8");
+  var output = JSON.parse(data);
+  console.log(output);
+  return output;
+}
+
+function WriteWebAppDb(name, output) {
+  const dbpath = `./resources/db/${name}.json`
+
+  let data = JSON.stringify(output, null, 2);
+  fs.writeFileSync(dbpath, data);
+}
+
+
 function createWindow() {
   // Create the browser window.
   const mainWindow = new BrowserWindow({
@@ -76,6 +97,20 @@ function createWindow() {
   });
 
 
+  ipcMain.handle("read-db", async (e, r) => {
+    const reply = ReadWebAppDb(r);
+    return reply
+
+  });
+
+  ipcMain.handle("write-db", async (e, r) => {
+    const data = JSON.parse(r);
+    WriteWebAppDb(data.name, data.data);
+
+    return data.data
+  });
+
+
 
   // Handle saving audio file
 
@@ -109,15 +144,6 @@ ipcMain.on('save-audio', (event, data) => {
 
 
 
-//   ipcMain.on('save-audio', (event, buffer) => {
-//     // const dbpath = join(AppResoursePath,`/temp_audio.wav`)
-//     const filePath = path.resolve(process.cwd(), 'resources/temp_audio.wav');
-//     // console.log(dbpath)
-//     // const filePath = './resources/temp_audio.wav' //path.join(__dirname, 'resources', 'temp_audio.wav');
-
-//     fs.writeFileSync(filePath, Buffer.from(buffer));
-//     console.log(`Audio saved at: ${filePath}`);
-// });
 
   mainWindow.webContents.setWindowOpenHandler((details) => {
     shell.openExternal(details.url)

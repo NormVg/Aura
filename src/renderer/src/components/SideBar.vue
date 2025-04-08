@@ -6,28 +6,37 @@ import MessageSquareIcon from "../assets/icon/message-square.svg";
 import MicOffIcon from "../assets/icon/mic-off.svg";
 import MicIcon from "../assets/icon/mic.svg";
 import StopBtn from "../assets/icon/stop.svg";
-
+import SettingsIcon from "../assets/icon/settings.svg";
+import SettingsOutlineIcon from "../assets/icon/settings-outline.svg";
 import ToggleIcon from "./ToggleIcon.vue";
 
-import { useMenuStore } from "../store/menuStore";
-import { useAppBasic } from "../store/AppBasicStore";
 
 import { useAudioRecorder } from "../composables/useAudioRecorder";
 import { useVoice } from "../composables/useVoice";
 import { useAiChat } from "../composables/useAiChat";
 
 import { useAiStore } from "../store/AIstore";
+import { useWorkspaceStore } from "../store/WorkSpace";
+import { useMenuStore } from "../store/menuStore";
+import { useAppBasic } from "../store/AppBasicStore";
+
+
 
 const AiStore = useAiStore();
-
 const menuStore = useMenuStore();
 const AppBasic = useAppBasic();
+const workspaceStore = useWorkspaceStore();
+
+
 
 const { startRecording, stopRecording } = useAudioRecorder();
 
-const { GetAiResp, history, GetAiVoiceResp, appendChat } = useAiChat();
+const { GetAiResp, history } = useAiChat();
 
 const { GoogleSST, TTS, AudioSrc } = useVoice();
+
+
+
 
 const HandleMenu = (params) => {
   // alert(params);
@@ -69,6 +78,14 @@ const HandleMic = async (param) => {
 
   await startRecording();
 };
+
+
+const HandleSettings = async () => {
+  // workspaceStore.addWorkspace({name:'settings'})
+  workspaceStore.workspaceExists('settings') ? workspaceStore.removeWorkspaceWithName('settings') :  workspaceStore.addWorkspace({name:'settings'})
+  workspaceStore.setCurrentWorkspaceByName('settings')
+
+};
 </script>
 
 <template>
@@ -95,6 +112,13 @@ const HandleMic = async (param) => {
         :n-icon="MessageSquareOutlineIcon"
         :t-icon="MessageSquareIcon"
         @event="HandleChat"
+      />
+
+      <ToggleIcon
+        id-name="sb-item"
+        :n-icon="SettingsOutlineIcon"
+        :t-icon="SettingsIcon"
+        @event="HandleSettings"
       />
     </div>
 

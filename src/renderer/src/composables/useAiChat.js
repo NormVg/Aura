@@ -4,8 +4,10 @@ import { ref,watch } from "vue";
 import { streamText } from "ai";
 import { createGoogleGenerativeAI } from "@ai-sdk/google";
 
-const systemPrompt =
-  "You are Aura, a highly intelligent and efficient assistant, responding primarily in English, but using basic Hindi for everyday communication and connecting words. Your answers are short, precise, clear, and professional, offering explanations only when asked. You add a touch of wit only when necessary, and your tone remains calm, composed, and always ready to assist—just like a true AI companion.";
+
+
+
+// const systemPrompt =  "You are Aura, a highly intelligent and efficient assistant, responding primarily in English, but using basic Hindi for everyday communication and connecting words. Your answers are short, precise, clear, and professional, offering explanations only when asked. You add a touch of wit only when necessary, and your tone remains calm, composed, and always ready to assist—just like a true AI companion.";
 const history = ref([]);
 const model = "gemini-2.0-flash-lite"//"gemini-2.5-pro-exp-03-25";
 
@@ -14,6 +16,31 @@ const key = "";
 const google = createGoogleGenerativeAI({
   apiKey: key,
 });
+
+
+
+async function generateSystemPrompt() {
+  const userData = await window.electron.ipcRenderer.invoke('read-db',"userSettings")
+
+  const { aiName , name, occupation, traits, preferences } = userData;
+  console.log(aiName , name, occupation, traits, preferences);
+  return `
+  You are ${aiName}, an AI assistant.
+  Address the user as ${name || "User"}.
+
+  The user is a ${occupation || "curious individual"}. Keep that in mind while assisting them.
+
+  Your personality traits are: ${traits || "helpful, intelligent, and friendly"}.
+
+  Additional preferences to consider: ${preferences || "None specified"}.
+
+  Stay aligned with these guidelines while interacting.
+  `;
+}
+
+const systemPrompt = ref('')
+systemPrompt.value = await generateSystemPrompt()
+
 
 const scrollToBottom = () => {
   const div = document.getElementById("chat-area");
@@ -56,8 +83,6 @@ async function processStreamingVoice(result) {
 
 export function useAiChat() {
 
-
-
     watch(history.value, () => {
     console.log('CHANGED');
     scrollToBottom()
@@ -68,11 +93,13 @@ export function useAiChat() {
   };
 
   const GetAiResp = async (userText) => {
+    systemPrompt.value = await generateSystemPrompt()
+
     history.value.push({ role: "user", content: userText });
 
     const result = streamText({
       model: google(model),
-      system:systemPrompt,
+      system:systemPrompt.value,
       messages: history.value,
     });
 
@@ -80,11 +107,13 @@ export function useAiChat() {
   };
 
   const GetAiVoiceResp = async (userText) => {
+    systemPrompt.value = await generateSystemPrompt()
+
     history.value.push({ role: "user", content: userText });
 
     const result = streamText({
       model: google(model),
-      system: systemPrompt,
+      system: systemPrompt.value,
       messages: history.value,
     });
 

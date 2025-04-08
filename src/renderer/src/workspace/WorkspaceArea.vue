@@ -19,7 +19,6 @@
   display: flex;
   justify-content: center;
   align-items: center;
-
   position: fixed;
   left: 50%;
   top: 50%;
