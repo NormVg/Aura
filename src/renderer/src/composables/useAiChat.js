@@ -11,7 +11,7 @@ import { createGoogleGenerativeAI } from "@ai-sdk/google";
 const history = ref([]);
 const model = "gemini-2.0-flash-lite"//"gemini-2.5-pro-exp-03-25";
 
-const key = "";
+const key = "AIzaSyAmZvCm9gD54c01HA00FzaHHCSaLKBK1bU";
 
 const google = createGoogleGenerativeAI({
   apiKey: key,
@@ -121,5 +121,32 @@ export function useAiChat() {
     return resp;
   };
 
-  return { history, GetAiResp, GetAiVoiceResp, appendChat };
+
+  const PlayAiVoice = () => {
+    const audio = document.getElementById("audio-tts");
+    audio.play();
+  }
+
+  const StopAiVoice = () => {
+    const audio = document.getElementById("audio-tts");
+    audio.pause();
+  }
+
+  const MuteAiVoice = () => {
+    const audio = document.getElementById("audio-tts");
+
+    audio.muted = true;
+    // audio.volume = 0;
+  };
+
+  const UnmuteAiVoice = () => {
+    const audio = document.getElementById("audio-tts");
+
+    audio.muted = false;
+    // audio.volume = 1;
+
+
+  };
+
+  return { history, GetAiResp, GetAiVoiceResp, appendChat ,PlayAiVoice , StopAiVoice, MuteAiVoice, UnmuteAiVoice};
 }

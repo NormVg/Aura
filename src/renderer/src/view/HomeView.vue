@@ -30,7 +30,7 @@ console.log(WorkspaceStore.AllWorkspace)
       </WorksapceArea>
 
       <WorksapceArea v-else>
-        {{ item.name }}
+        <!-- {{ item.name }} -->
       </WorksapceArea>
     </WorkspaceTab>
   </WorkspaceManager>

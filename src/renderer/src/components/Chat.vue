@@ -1,5 +1,5 @@
 <script setup>
-import { makeDestructurable, useTextareaAutosize } from "@vueuse/core";
+import { useTextareaAutosize } from "@vueuse/core";
 import LeftCurve from "../assets/img/left-curve.svg";
 import RightCurve from "../assets/img/right-curve.svg";
 import EnterBtn from "../assets/icon/enterBtn.svg";
@@ -8,17 +8,68 @@ import StopBtn from "../assets/icon/stop.svg";
 import { onMounted, ref, watch } from "vue";
 import { useAiChat } from "../composables/useAiChat";
 
-import MarkdownRender from "./MarkdownRender.vue";
 
 const { textarea, input } = useTextareaAutosize();
 const { history, GetAiResp } = useAiChat();
 
 
 import {useAiStore} from "../store/AIstore"
+import ChatBubble from "./ChatBubble.vue";
+import ChatLoading from "./ChatLoading.vue";
+import ChatContextBar from "./ChatContextBar.vue";
 
 const AiStore = useAiStore()
 
-onMounted(() => {
+
+
+const handleSend = async () => {
+  if (!input.value.trim() || AiStore.isRunningAi) {
+    console.log("NOT HAPPNING");
+    return;
+  }
+
+  AiStore.setIsRunningAi(true)
+  const ques = input.value;
+  input.value = "";
+
+  if (AiStore.AiContextBar.length > 0) {
+
+    const quesWithContext = AiStore.AiContextBar.map((item) => {
+      if (item.type === "reply") {
+
+        return "```\nTagged previous message for context:\n" + item.text + "\n```";
+
+      }
+
+    }).join("\n---\n");
+
+    const quesWithContextAndQues = `${ques}\n---\n${quesWithContext}`;
+
+    console.log(quesWithContextAndQues);
+    await GetAiResp(quesWithContextAndQues);
+    AiStore.setAiContextBar([])
+
+  }else{
+    await GetAiResp(ques);
+  }
+
+  AiStore.setIsRunningAi(false)
+
+
+};
+
+
+
+
+
+
+
+
+
+
+
+onMounted(async () => {
+
   const scrollToBottom = () => {
     const div = document.getElementById("chat-area");
     console.log(div.scrollHeight);
@@ -39,35 +90,9 @@ onMounted(() => {
     },
     { deep: true }
   );
-});
-
-const copyText = (text) => {
-  navigator.clipboard
-    .writeText(text)
-    .then(() => {
-      console.log("Text copied to clipboard");
-    })
-    .catch((err) => {
-      console.error("Could not copy text: ", err);
-    });
-};
-
-const handleSend = async () => {
-  if (!input.value.trim() || AiStore.isRunningAi) {
-    console.log("NOT HAPPNING");
-    return;
-  }
-
-  AiStore.setIsRunningAi(true)
-  const ques = input.value;
-  input.value = "";
-  await GetAiResp(ques);
-  AiStore.setIsRunningAi(false)
 
 
-};
 
-onMounted(async () => {
   const resizable = document.getElementById("chat-box");
   const leftResizer = document.getElementById("leftResizer");
 
@@ -118,6 +143,11 @@ onMounted(async () => {
       }
     });
 });
+
+
+
+
+
 </script>
 
 <template>
@@ -125,32 +155,27 @@ onMounted(async () => {
     <div class="left-resizer" id="leftResizer"></div>
 
     <div id="chat-area">
-      <div
-        v-for="item in history"
-        :key="item"
-        :id="item.role === 'user' ? 'user-msg' : 'ai-msg'"
-      >
-        <div>
-          <MarkdownRender :md="item.content" />
-        </div>
-      </div>
+
+      <ChatBubble v-for="item,index in history" :key="item" :role="item.role" :content="item.content" :index="index"/>
 
 
 
-      <div id="loader-wala" v-if="AiStore.isRunningAi">
-        <div class="loader"></div>
-      </div>
+      <ChatLoading  v-if="AiStore.isRunningAi"/>
 
     </div>
 
     <div id="chat-inp-box-con">
       <div id="before-tb"><img :src="LeftCurve" /></div>
+
       <div id="chat-inp-box">
+
+        <ChatContextBar />
+
         <textarea
           ref="textarea"
           v-model="input"
           class="resize-none"
-          placeholder="What's on your mind?"
+          placeholder="What's on your mind?  crtl+enter to send"
         />
         <div id="send-btn" @click="handleSend">
           <img :src="StopBtn" v-if="AiStore.isRunningAi" />
@@ -163,86 +188,8 @@ onMounted(async () => {
 </template>
 
 <style scoped>
-#loader-wala {
-  height: 30px;
-  width: 99%;
-}
 
-/* HTML: <div class="loader"></div> */
-.loader {
-  width: 30px;
-  aspect-ratio: 2;
-  --_g: no-repeat radial-gradient(circle closest-side, #cdc6f7 90%, #0000);
-  background:
-    var(--_g) 0% 50%,
-    var(--_g) 50% 50%,
-    var(--_g) 100% 50%;
-  background-size: calc(100% / 3) 50%;
-  animation: l3 1s infinite linear;
-}
-@keyframes l3 {
-  20% {
-    background-position:
-      0% 0%,
-      50% 50%,
-      100% 50%;
-  }
-  40% {
-    background-position:
-      0% 100%,
-      50% 0%,
-      100% 50%;
-  }
-  60% {
-    background-position:
-      0% 50%,
-      50% 100%,
-      100% 0%;
-  }
-  80% {
-    background-position:
-      0% 50%,
-      50% 50%,
-      100% 100%;
-  }
-}
 
-#ai-msg {
-  /* border:1px solid salmon ; */
-  width: 99%;
-  height: max-content;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  color: #cdc6f7;
-}
-
-#ai-msg div {
-  text-align: left;
-  /* border: 1px solid salmon; */
-  height: 100%;
-  width: 100%;
-}
-
-#user-msg {
-  /* border:1px solid salmon ; */
-  width: 99%;
-  height: max-content;
-  display: flex;
-  justify-content: right;
-  align-items: center;
-  /* justify-items: flex-start; */
-}
-
-#user-msg > div {
-  width: max-content;
-  height: max-content;
-  background-color: var(--sbgc);
-  padding: 10px;
-  padding-bottom: 0;
-  border-radius: 10px;
-  text-align: left;
-}
 
 .left-resizer {
   width: 2px;

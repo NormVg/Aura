@@ -8,7 +8,8 @@ import { EdgeTTS } from '@andresaya/edge-tts';
 function cleanMarkdown(md) {
   return md
       .replace(/```[\s\S]*?```/g, '') // Remove code blocks (``` code ```)
-      .replace(/`[^`]+`/g, '') // Remove inline code (`code`)
+       // Replace inline code (`code`) with normal words
+       .replace(/`[^`]+`/g, (match) => match.slice(1, -1))
       .replace(/!\[.*?\]\(.*?\)/g, '') // Remove images (![alt](url))
       .replace(/\[([^\]]+)\]\(.*?\)/g, '$1') // Remove links but keep text [text](url) → text
       .replace(/^>\s?/gm, '') // Remove blockquotes ("> text")

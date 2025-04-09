@@ -3,16 +3,42 @@ import { defineStore } from 'pinia'
 
 export const useAiStore = defineStore('ai-store', () => {
   const isRunningAi = ref(false)
-  const isLoadingAi = ref(false)
+  const AiVoiceAudio = ref(null)
 
-  const setIsLoadingAi = (param) => {
-    isLoadingAi.value = param
+  const AiContextBar = ref([])
+
+
+
+  const setAiContextBar = (param) => {
+    AiContextBar.value = param
   }
+
+  const AddAiContextBar = (param) => {
+    AiContextBar.value.push(param)
+  }
+
+  const removeAiContextBar = (param) => {
+
+    AiContextBar.value.splice(param, 1)
+
+  }
+
+  const setAiVoiceAudio = (param) => {
+    AiVoiceAudio.value = param
+  }
+
 
   const setIsRunningAi = (param )=>{
       isRunningAi.value = param
   }
 
 
-  return { isRunningAi, setIsRunningAi ,isLoadingAi ,setIsLoadingAi}
+  return {
+    isRunningAi, setIsRunningAi,
+    AiVoiceAudio, setAiVoiceAudio,
+
+    AiContextBar, setAiContextBar,
+    AddAiContextBar,removeAiContextBar
+
+   }
 })

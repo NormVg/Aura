@@ -161,7 +161,7 @@ input, textarea {
   padding: 0.75rem;
   background-color: rgba(0, 0, 0, 0.2);
   border: 1px solid #2D2C35;
-  border-radius: 4px;
+  border-radius: 10px;
   color: #ADACB3;
   font-size: 1rem;
   transition: border-color 0.3s, box-shadow 0.3s;
@@ -187,7 +187,7 @@ button {
   background-color: #CDC6F7;
   color: #18171C;
   border: none;
-  border-radius: 4px;
+  border-radius: 10px;
   padding: 0.75rem 1.5rem;
   font-size: 1rem;
   font-weight: 600;

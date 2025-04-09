@@ -31,7 +31,7 @@ const workspaceStore = useWorkspaceStore();
 
 const { startRecording, stopRecording } = useAudioRecorder();
 
-const { GetAiResp, history } = useAiChat();
+const { GetAiResp, history,PlayAiVoice ,StopAiVoice} = useAiChat();
 
 const { GoogleSST, TTS, AudioSrc } = useVoice();
 
@@ -67,10 +67,11 @@ const HandleMic = async (param) => {
 
     await TTS(history.value[history.value.length - 1].content);
 
-    const audioElement = document.getElementById("sst");
-    if (audioElement) {
-      audioElement.play()
-    }
+    // AiStore.setAiVoiceAudio(AudioSrc.value);
+    await AiStore.setAiVoiceAudio(AudioSrc.value)
+    StopAiVoice()
+    await PlayAiVoice()
+    // console.log("AUDIO", AiStore.AiVoiceAudio);
     AiStore.setIsRunningAi(false)
     return;
   }
@@ -90,7 +91,9 @@ const HandleSettings = async () => {
 
 <template>
   <div id="sb-bar">
-    <audio :src="AudioSrc" id="sst"></audio>
+
+
+
     <div id="sb-list-item">
       <ToggleIcon
         v-if="AiStore.isRunningAi"
