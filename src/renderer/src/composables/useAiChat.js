@@ -11,7 +11,7 @@ import { createGoogleGenerativeAI } from "@ai-sdk/google";
 const history = ref([]);
 const model = "gemini-2.0-flash-lite"//"gemini-2.5-pro-exp-03-25";
 
-const key = "AIzaSyAmZvCm9gD54c01HA00FzaHHCSaLKBK1bU";
+const key = "";
 
 const google = createGoogleGenerativeAI({
   apiKey: key,
