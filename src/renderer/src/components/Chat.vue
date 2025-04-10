@@ -59,15 +59,6 @@ const handleSend = async () => {
 };
 
 
-
-
-
-
-
-
-
-
-
 onMounted(async () => {
 
   const scrollToBottom = () => {

@@ -8,7 +8,9 @@ import WorkspaceManager from "../workspace/WorkspaceManager.vue";
 import WorkspaceTab from "../workspace/WorkspaceTab.vue";
 import WorksapceArea from "../workspace/WorkspaceArea.vue";
 import Settings from "../workspace/Settings.vue";
-
+import WorkspaceBar from "../components/WorkspaceBar.vue";
+import PopUpComp from "../components/PopUp/PopUpComp.vue";
+import PopNewWorkspace from "../components/PopUp/PopNewWorkspace.vue";
 
 const AppBasic = useAppBasic();
 const WorkspaceStore = useWorkspaceStore()
@@ -20,6 +22,8 @@ console.log(WorkspaceStore.AllWorkspace)
 
 <template>
   <Aura />
+  <WorkspaceBar/>
+
   <Footer />
   <WorkspaceManager>
     <WorkspaceTab v-for="item in WorkspaceStore.AllWorkspace" :key="item" :WinID="item.name">
@@ -37,4 +41,7 @@ console.log(WorkspaceStore.AllWorkspace)
   <Transition>
     <Chat v-if="AppBasic.isChatBox" />
   </Transition>
+
+
+  <PopUpComp/>
 </template>

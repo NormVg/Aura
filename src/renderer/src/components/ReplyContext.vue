@@ -74,7 +74,9 @@ img{
   font-size: 13px;
 
   padding: 0 10px;
-  background-color: #343438;
+  background: linear-gradient(to right, #1E1E20, #343438);
+  /* background: #343438; */
+
   border-radius: 5px;
   display: flex;
   justify-content: space-between;
@@ -83,6 +85,7 @@ img{
   margin-right: 5px;
   user-select: none;
   white-space: nowrap;
+  transition: all 0.2s ease-in-out;
 }
 
 span{
@@ -94,7 +97,7 @@ span{
 }
 
 #reply-context:hover{
-  background-color: #3f3f42;
+  background: #3f3f42;
   cursor: pointer;
 }
 

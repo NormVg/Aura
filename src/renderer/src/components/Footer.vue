@@ -71,6 +71,11 @@ const startInactivityWatcher = () => {
   );
 };
 
+
+const ToggleWorkspaceBar = () =>{
+  workspaceStore.setIsWorksSpaceBar(!workspaceStore.isWorksSpaceBar);
+}
+
 const onMouseEnter = () => {
   stopInactivityTimer();
 };
@@ -130,9 +135,9 @@ watch(history.value, OnHistoryChange, { deep: true });
 <template>
   <div id="footer-box">
     <div id="footer-slider">
-      <div id="fs-box" @mousewheel="myMouseScroll">
-        <div id="slider-bar">
-          <div id="slider-ball" :style="CalcBallPosition">
+      <div id="fs-box" @mousewheel="myMouseScroll" >
+        <div id="slider-bar" @click="ToggleWorkspaceBar">
+          <div id="slider-ball" :style="CalcBallPosition" >
             {{ workspaceStore.currentWorkspaceIndex + 1 }}<span>•</span
             >{{ workspaceStore.AllWorkspace.length }}
           </div>
@@ -211,6 +216,7 @@ watch(history.value, OnHistoryChange, { deep: true });
   background-color: var(--sc);
 }
 #slider-ball {
+  user-select: none;
   height: 15px;
   width: 25px;
   border-radius: 4px;

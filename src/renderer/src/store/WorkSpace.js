@@ -2,8 +2,16 @@ import { ref } from 'vue'
 import { defineStore } from 'pinia'
 
 export const useWorkspaceStore = defineStore('workspace-store', () => {
-  const AllWorkspace = ref([{"name":'home'}])
+  const AllWorkspace = ref([{"name":'Home'}])
   const currentWorkspaceIndex = ref(0)
+
+  const isWorksSpaceBar = ref(false)
+
+  const setIsWorksSpaceBar = (value) => {
+    isWorksSpaceBar.value = value
+  }
+
+
 
   const setAllWorkspace = (workspaces) => {
     AllWorkspace.value = workspaces
@@ -22,6 +30,10 @@ export const useWorkspaceStore = defineStore('workspace-store', () => {
   }
 
   const removeWorkspaceWithName = (workspaceName) => {
+    if( workspaceName === 'Home') {
+      return
+    }
+
     const index = AllWorkspace.value.findIndex(workspace => workspace.name === workspaceName)
     if (index !== -1) {
       AllWorkspace.value.splice(index, 1)
@@ -73,6 +85,9 @@ export const useWorkspaceStore = defineStore('workspace-store', () => {
     nextWorkspace,
     previousWorkspace,
     getWorkspaceIndexByName,
-    setCurrentWorkspaceByName
+    setCurrentWorkspaceByName,
+    isWorksSpaceBar,
+    setIsWorksSpaceBar,
+
   }
 })

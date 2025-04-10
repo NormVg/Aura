@@ -8,7 +8,7 @@ import MicIcon from "../assets/icon/mic.svg";
 import StopBtn from "../assets/icon/stop.svg";
 import SettingsIcon from "../assets/icon/settings.svg";
 import SettingsOutlineIcon from "../assets/icon/settings-outline.svg";
-import ToggleIcon from "./ToggleIcon.vue";
+import SidebarToggleIcon from "./SidebarToggleIcon.vue";
 
 
 import { useAudioRecorder } from "../composables/useAudioRecorder";
@@ -19,6 +19,7 @@ import { useAiStore } from "../store/AIstore";
 import { useWorkspaceStore } from "../store/WorkSpace";
 import { useMenuStore } from "../store/menuStore";
 import { useAppBasic } from "../store/AppBasicStore";
+import { computed } from "vue";
 
 
 
@@ -87,6 +88,11 @@ const HandleSettings = async () => {
   workspaceStore.setCurrentWorkspaceByName('settings')
 
 };
+
+const SettingsWatch = computed(() => {
+  return workspaceStore.workspaceExists('settings');
+});
+
 </script>
 
 <template>
@@ -95,14 +101,14 @@ const HandleSettings = async () => {
 
 
     <div id="sb-list-item">
-      <ToggleIcon
+      <SidebarToggleIcon
         v-if="AiStore.isRunningAi"
         id-name="sb-item"
         :n-icon="StopBtn"
         :t-icon="StopBtn"
       />
 
-      <ToggleIcon
+      <SidebarToggleIcon
         v-else
         id-name="sb-item"
         :n-icon="MicIcon"
@@ -110,22 +116,24 @@ const HandleSettings = async () => {
         @event="HandleMic"
       />
 
-      <ToggleIcon
+      <SidebarToggleIcon
         id-name="sb-item"
         :n-icon="MessageSquareOutlineIcon"
         :t-icon="MessageSquareIcon"
         @event="HandleChat"
       />
 
-      <ToggleIcon
+      <SidebarToggleIcon
         id-name="sb-item"
         :n-icon="SettingsOutlineIcon"
         :t-icon="SettingsIcon"
         @event="HandleSettings"
+        :watcher="SettingsWatch"
+
       />
     </div>
 
-    <ToggleIcon
+    <SidebarToggleIcon
       id-name="sb-apps"
       @event="HandleMenu"
       :n-icon="CubeOutlineIcon"
