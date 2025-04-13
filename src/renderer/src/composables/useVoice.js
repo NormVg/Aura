@@ -3,7 +3,6 @@ import { ref } from "vue";
 
 
 export function useVoice() {
-
   const AudioSrc = ref(null)
 
   const GoogleSST = async () => {
@@ -17,9 +16,9 @@ export function useVoice() {
 
 
     const resp = await window.electron.ipcRenderer.invoke("tts", text);
-    console.log(resp)
+    console.log(resp,"HEHEH 0")
 
-    AudioSrc.value = `data:audio/mp3;base64,${resp}`;
+    AudioSrc.value = resp
     // AudioSrc.value = resp
 
   };

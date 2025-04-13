@@ -17,7 +17,7 @@ function cleanMarkdown(md) {
       .trim(); // Trim leading/trailing whitespace
 }
 
-export async function generateSpeech(md) {
+export async function generateSpeech(md,path) {
 
   const tts = new EdgeTTS();
 
@@ -32,7 +32,7 @@ export async function generateSpeech(md) {
 
 
 
-  await tts.toFile("./resources/tts_audio");
+  await tts.toFile(`${path}/tts_audio`);
 
 }
 

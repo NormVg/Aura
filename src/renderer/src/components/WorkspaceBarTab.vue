@@ -44,7 +44,7 @@ const isActiveStyle = computed(() => {
 
 <style scoped>
 #wtab{
-  height: 30px;
+  height: 25px;
   width: max-content;
   max-width: 200px;
   min-width: 120px;

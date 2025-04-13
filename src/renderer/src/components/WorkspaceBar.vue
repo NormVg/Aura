@@ -62,7 +62,7 @@ img:active{
   justify-content: space-between;
   align-items: center;
   background-color: #1e1e20;
-  height: 40px;
+  height: 35px;
   max-width: 60vw;
   min-width: 250px;
   padding: 0 10px;

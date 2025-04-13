@@ -12,6 +12,7 @@ import SidebarToggleIcon from "./SidebarToggleIcon.vue";
 
 
 import { useAudioRecorder } from "../composables/useAudioRecorder";
+import {  useGetLocalFile } from "../composables/useGetLocalFile";
 import { useVoice } from "../composables/useVoice";
 import { useAiChat } from "../composables/useAiChat";
 
@@ -31,6 +32,7 @@ const workspaceStore = useWorkspaceStore();
 
 
 const { startRecording, stopRecording } = useAudioRecorder();
+const { GetLocalFile } = useGetLocalFile()
 
 const { GetAiResp, history,PlayAiVoice ,StopAiVoice} = useAiChat();
 
@@ -69,7 +71,10 @@ const HandleMic = async (param) => {
     await TTS(history.value[history.value.length - 1].content);
 
     // AiStore.setAiVoiceAudio(AudioSrc.value);
-    await AiStore.setAiVoiceAudio(AudioSrc.value)
+    // console.log(AudioSrc.value,"HEHEH 0")
+
+    await AiStore.setAiVoiceAudio(GetLocalFile(AudioSrc.value))
+
     StopAiVoice()
     await PlayAiVoice()
     // console.log("AUDIO", AiStore.AiVoiceAudio);

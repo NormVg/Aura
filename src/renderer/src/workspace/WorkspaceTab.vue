@@ -38,7 +38,7 @@ const isActive = computed(() => {
 
 <template>
   <Transition >
-    <div class="tab-manager-child"  v-if="isActive">
+    <div class="tab-manager-child"  v-show="isActive">
       <slot> </slot>
     </div>
   </Transition>

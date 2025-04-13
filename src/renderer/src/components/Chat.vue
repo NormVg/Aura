@@ -327,7 +327,12 @@ textarea::-webkit-scrollbar {
   padding-top: 10px;
 }
 
+#chat-box:hover{
+  background-color: #00000073;
+}
+
 #chat-box {
+  transition: background-color ease-in-out 200ms;
   z-index: var(--z-chat);
   background-color: #f6f6f613;
   height: 100vh;

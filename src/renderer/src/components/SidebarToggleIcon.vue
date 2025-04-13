@@ -36,9 +36,9 @@ if (typeof props.watcher === "boolean") {
   watch(() => props.watcher,() => currentState.value = props.watcher);
 }
 
-const currentIcon = computed(() => {
-  return currentState.value ? props.tIcon : props.nIcon;
-});
+// const currentIcon = computed(() => {
+//   return currentState.value ? props.tIcon : props.nIcon;
+// });
 
 const toggleState = () => {
   currentState.value = !currentState.value;
@@ -76,7 +76,13 @@ const handleMouseLeave = async () => {
     @mouseenter="handleMouseEnter"
     @mouseleave="handleMouseLeave"
   >
-    <img :src="currentIcon" />
+
+  <!-- <Transition name="bounce"> -->
+    <img :src="props.tIcon" v-if="currentState"  />
+    <img :src="props.nIcon" v-else />
+  <!-- </Transition> -->
+
+
   </div>
 </template>
 
@@ -84,4 +90,7 @@ const handleMouseLeave = async () => {
 img {
   width: 25px;
 }
+
+
+
 </style>

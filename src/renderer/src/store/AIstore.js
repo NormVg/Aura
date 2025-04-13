@@ -3,7 +3,7 @@ import { defineStore } from 'pinia'
 
 export const useAiStore = defineStore('ai-store', () => {
   const isRunningAi = ref(false)
-  const AiVoiceAudio = ref(null)
+  const AiVoiceAudio = ref(undefined)
 
   const AiContextBar = ref([])
 

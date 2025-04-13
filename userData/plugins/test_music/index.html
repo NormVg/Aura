@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Music Widget</title>
+  <style>
+    /* body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+    } */
+    .widget {
+      border: 2px solid #4CAF50;
+      border-radius: 10px;
+      padding: 20px;
+      text-align: center;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+
+    }
+    .widget h1 {
+      font-size: 24px;
+      color: #4CAF50;
+      margin-bottom: 10px;
+    }
+    .widget p {
+      font-size: 16px;
+      color: #333;
+      margin-bottom: 20px;
+    }
+    .widget audio {
+      /* width: 100%; */
+      outline: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="widget">
+    <h1>Test Music Plugin</h1>
+    <p>Enjoy your favorite music!</p>
+    <audio src="%PLUGIN_PATH%/test-music.mp3" controls></audio>
+    <img src="%PLUGIN_PATH%/img/icon.svg" alt="">
+  </div>
+</body>
+</html>

@@ -1,0 +1,14 @@
+{
+
+  "name": "test_music",
+  "description": "test music",
+  "icon": {
+    "small": "/icon.svg",
+    "base": "/icon.svg",
+    "large": "/icon.svg"
+  },
+  "short_name": "music",
+  "version": "1.0.0",
+  "author": "thenormvg.vercel.app",
+  "main": "index.html"
+}

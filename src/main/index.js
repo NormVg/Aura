@@ -6,12 +6,52 @@ import fs from "fs";
 import os from "os"
 import path from "path"
 
-const AppResoursePath = app.isPackaged ? join(os.homedir(), `ASD`) : `./resources/`;
-
-
 const { execFile } = require("child_process");
-
 import {generateSpeech} from "./tts"
+
+
+const userDataPath = app.getPath('userData');
+const inDevPath = `./userData/`
+const AppResoursePath = app.isPackaged ? userDataPath : inDevPath;
+const pluginPath = join(AppResoursePath, 'plugins');
+console.log(AppResoursePath)
+
+
+
+
+function ensurePathExists(targetPath) {
+  console.log("Ensuring path exists:", targetPath);
+  const dirPath = path.dirname(targetPath);
+
+  // Check if the directory exists, if not, create it
+  if (!fs.existsSync(dirPath)) {
+    fs.mkdirSync(dirPath, { recursive: true });
+  }
+
+  // If it's a file path, ensure the file exists
+  if (!fs.existsSync(targetPath)) {
+
+
+    if (path.basename(targetPath) === "userSettings.json") {
+      fs.writeFileSync(
+        targetPath,
+        JSON.stringify({
+          aiName: "",
+          name: "",
+          occupation: "",
+          traits: "",
+          preferences: ""
+        }, null, 2)
+      );
+    }
+      else {
+      fs.writeFileSync(targetPath, '');
+    }
+
+  }
+
+  return targetPath;
+}
 
 
 function executeSST(filePath, audioFile) {
@@ -40,7 +80,9 @@ function executeSST(filePath, audioFile) {
 function ReadWebAppDb(name) {
 
 
-  const dbpath = `./resources/db/${name}.json`
+  var  dbpath = join(AppResoursePath, `aura_db/${name}.json`);
+  dbpath = ensurePathExists(dbpath);
+
 
 
   var data = fs.readFileSync(dbpath, "utf8");
@@ -50,11 +92,13 @@ function ReadWebAppDb(name) {
 }
 
 function WriteWebAppDb(name, output) {
-  const dbpath = `./resources/db/${name}.json`
+  var dbpath = join(AppResoursePath,`aura_db/${name}.json`)
 
-  let data = JSON.stringify(output, null, 2);
-  fs.writeFileSync(dbpath, data);
-}
+  dbpath = ensurePathExists(dbpath);
+
+    let data = JSON.stringify(output, null, 2);
+    fs.writeFileSync(dbpath, data);
+  }
 
 
 function createWindow() {
@@ -67,7 +111,12 @@ function createWindow() {
     ...(process.platform === 'linux' ? { icon } : {}),
     webPreferences: {
       preload: join(__dirname, '../preload/index.js'),
-      sandbox: false
+      sandbox: false,
+      nodeIntegration: true,
+      webviewTag: true,
+      contextIsolation:false,
+      // allowRunningInsecureContent: true,
+      webSecurity:false
     }
   })
 
@@ -75,15 +124,29 @@ function createWindow() {
     mainWindow.show()
   })
 
+
+ipcMain.handle('get-user-data-path', async () => {
+  console.log('Received request for DB path in main process',AppResoursePath);
+  return AppResoursePath
+})
+
   ipcMain.handle('tts', async (event, arg) => {
+
+    var dbpath = join(AppResoursePath,`aura_files/tts_audio.mp3`)
+    dbpath = ensurePathExists(dbpath);
+
     console.log('Received request in main process',arg);
 
 
-    await generateSpeech(arg);
+    await generateSpeech(arg,join(AppResoursePath,'aura_files'))
 
-    const fileBuffer = fs.readFileSync("./resources/tts_audio.mp3"); // Read audio file synchronously
-    const base64Audio = fileBuffer.toString('base64'); // Convert buffer to base64 string
-    return base64Audio; // Return base64 string to the renderer
+    dbpath = path.resolve(process.cwd(), dbpath);
+
+    return dbpath
+
+    // const fileBuffer = fs.readFileSync(dbpath); // Read audio file synchronously
+    // const base64Audio = fileBuffer.toString('base64'); // Convert buffer to base64 string
+    // return base64Audio; // Return base64 string to the renderer
 
   });
 
@@ -91,8 +154,10 @@ function createWindow() {
   ipcMain.handle('sst', async (event, arg) => {
     console.log('Received request in main process');
 
+    var dbpath = join(AppResoursePath,`aura_files/temp_audio.wav`)
+    dbpath = ensurePathExists(dbpath);
 
-    const outputJson = await executeSST("./resources/sst", './resources/temp_audio.wav')
+    const outputJson = await executeSST("./resources/sst", dbpath)
     return outputJson
   });
 
@@ -111,14 +176,40 @@ function createWindow() {
   });
 
 
+ipcMain.handle("load-plugin", async (e, r) => {
+
+  const pluginsList = fs.readdirSync(pluginPath);
+  var PluginData = []
+
+  pluginsList.forEach(element => {
+    const configPath = join(pluginPath, element,'config.aura.json')
+    const configPathExists = fs.existsSync(configPath);
+    if (configPathExists) {
+      const configData = fs.readFileSync(configPath, 'utf8');
+      const config = JSON.parse(configData);
+      PluginData.push(config)
+      console.log("Plugin Config:", config);
+    } else {
+      console.error(`Config file does not exist: ${configPath}`);
+    }
+  });
+
+  console.log("Plugins loaded:", pluginsList);
+
+  return PluginData
+})
 
   // Handle saving audio file
 
 // Set up the IPC handler for saving audio
 ipcMain.on('save-audio', (event, data) => {
+
+  var dbpath = join(AppResoursePath,`aura_files/temp_audio.wav`)
+  dbpath = ensurePathExists(dbpath);
+
   try {
     const { buffer, filePath, duration } = data;
-    const filePathf = path.resolve(process.cwd(), 'resources/temp_audio.wav');
+    const filePathf = path.resolve(process.cwd(), dbpath);
 
     // Convert array back to Buffer
     const audioBuffer = Buffer.from(buffer);
@@ -196,6 +287,3 @@ app.on('window-all-closed', () => {
     app.quit()
   }
 })
-
-// In this file you can include the rest of your app's specific main process
-// code. You can also put them in separate files and require them here.

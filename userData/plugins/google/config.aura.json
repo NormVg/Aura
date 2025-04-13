@@ -1,0 +1,13 @@
+{
+  "name": "google",
+  "description": "test music",
+  "icon": {
+    "small": "/plugin-default-icon.svg",
+    "base": "/plugin-default-icon.svg",
+    "large": "/plugin-default-icon.svg"
+  },
+  "short_name": "music",
+  "version": "1.0.0",
+  "author": "thenormvg.vercel.app",
+  "main": "index.html"
+}

@@ -13,11 +13,14 @@ import { ref } from "vue";
 import { useAiStore } from "../store/AIstore";
 import { useVoice } from "../composables/useVoice";
 import { useAiChat } from "../composables/useAiChat";
+import { useGetLocalFile } from "../composables/useGetLocalFile";
 
 const AiStore = useAiStore()
 
 const  {  TTS  ,AudioSrc} = useVoice()
 const { PlayAiVoice ,StopAiVoice}  = useAiChat()
+
+const { GetLocalFile} = useGetLocalFile()
 
 const props = defineProps({
   role: {
@@ -80,7 +83,7 @@ const handleSpeak = async () => {
 
 // AiStore.setAiVoiceAudio(AudioSrc.value);
   await StopAiVoice()
-  await AiStore.setAiVoiceAudio(AudioSrc.value)
+  await AiStore.setAiVoiceAudio(GetLocalFile(AudioSrc.value))
 
   await PlayAiVoice()
   ActiveSpeak.value = false;
